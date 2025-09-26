@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
+import { Toaster } from "@/components/ui/sonner";
 
 // JetBrains Mono - Very sleek, modern programming font
 const jetbrainsMono = JetBrains_Mono({
@@ -24,6 +25,7 @@ export default function RootLayout({
     <TRPCReactProvider>
       <html lang="en">
         <body className={`${jetbrainsMono.variable} antialiased`}>
+          <Toaster />
           {children}
         </body>
       </html>
