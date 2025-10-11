@@ -23,7 +23,7 @@ export default function Home() {
         disabled={invoke.isPending}
         onClick={() => invoke.mutate({ value: value })}
       >
-        Invoke
+        Invoke the function
       </Button>
     </div>
   );
