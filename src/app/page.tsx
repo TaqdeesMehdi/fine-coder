@@ -9,22 +9,24 @@ import { toast } from "sonner";
 export default function Home() {
   const [value, setValue] = useState("");
   const trpc = useTRPC();
-  const invoke = useMutation(
-    trpc.invoke.mutationOptions({
+  const { data: messages } = useQuery(trpc.messages.getMany.queryOptions());
+  const createMessage = useMutation(
+    trpc.messages.create.mutationOptions({
       onSuccess: () => {
         toast.success("Background job initiated");
       },
     })
   );
   return (
-    <div className="text-4xl font-extrabold text-blue-500">
+    <div className="text-2xl font-extrabold text-blue-500">
       <Input value={value} onChange={(e) => setValue(e.target.value)} />
       <Button
-        disabled={invoke.isPending}
-        onClick={() => invoke.mutate({ value: value })}
+        disabled={createMessage.isPending}
+        onClick={() => createMessage.mutate({ value: value })}
       >
-        Invoke the function
+        create message
       </Button>
+      {JSON.stringify(messages, null, 2)}
     </div>
   );
 }
