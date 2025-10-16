@@ -2,14 +2,15 @@ import { inngest } from "@/inngest/client";
 import { prisma } from "@/lib/db";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
-export const messagesRouter = createTRPCRouter({
+import { generateSlug } from "random-word-slugs";
+export const projectsRouter = createTRPCRouter({
   getMany: baseProcedure.query(async () => {
-    const messages = await prisma.message.findMany({
+    const projects = await prisma.project.findMany({
       orderBy: {
         updatedAt: "desc",
       },
     });
-    return messages;
+    return projects;
   }),
   create: baseProcedure
     .input(
@@ -17,16 +18,21 @@ export const messagesRouter = createTRPCRouter({
         value: z.string().min(1, { message: "value is required" }).max(1500, {
           message: "value is too long , keep it under 1500 words",
         }),
-        projectId: z.string().min(1, { message: "Project Id is required" }),
       })
     )
     .mutation(async ({ input }) => {
-      const createdMessage = await prisma.message.create({
+      const createdProject = await prisma.project.create({
         data: {
-          projectId: input.projectId,
-          content: input.value,
-          role: "USER",
-          type: "RESULT",
+          name: generateSlug(2, {
+            format: "kebab",
+          }),
+          messages: {
+            create: {
+              content: input.value,
+              role: "USER",
+              type: "RESULT",
+            },
+          },
         },
       });
 
@@ -34,9 +40,9 @@ export const messagesRouter = createTRPCRouter({
         name: "code-agent/run",
         data: {
           value: input.value,
-          projectId: input.projectId,
+          projectId: createdProject.id,
         },
       });
-      return createdMessage;
+      return createdProject;
     }),
 });

@@ -9,9 +9,8 @@ import { toast } from "sonner";
 export default function Home() {
   const [value, setValue] = useState("");
   const trpc = useTRPC();
-  const { data: messages } = useQuery(trpc.messages.getMany.queryOptions());
   const createMessage = useMutation(
-    trpc.messages.create.mutationOptions({
+    trpc.projects.create.mutationOptions({
       onSuccess: () => {
         toast.success("Background job initiated");
       },
@@ -26,7 +25,6 @@ export default function Home() {
       >
         create message
       </Button>
-      {JSON.stringify(messages, null, 2)}
     </div>
   );
 }
