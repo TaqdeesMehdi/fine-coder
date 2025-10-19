@@ -71,7 +71,7 @@ export const ProjectView = ({ projectId }: Props) => {
             <TabsContent value="preview">
               {!!activeFragment && <FragmentWeb data={activeFragment} />}
             </TabsContent>
-            <TabsContent value="code">
+            <TabsContent value="code" className="min-h-0">
               {/* <CodeView lang="ts" code="const b = 'real human';" /> */}
               {!!activeFragment?.files && (
                 <FileExplorer
